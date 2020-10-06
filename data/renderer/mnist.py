@@ -61,15 +61,15 @@ class MNISTRenderer(object):
     labels = []
     size = self.config['attributes']['size']
     bg_idx = list(filter(
-      lambda i: graph.node[i]['cls'] ==  'Background',
+      lambda i: graph.nodes[i]['cls'] ==  'Background',
       range(len(graph.nodes))))
-    bg = graph.node[bg_idx[0]]['attr']['texture']
+    bg = graph.nodes[bg_idx[0]]['attr']['texture']
     out_img = np.zeros(size, dtype=np.uint8)
 
     # HACK: Should be a better way to find if a node
     # is a digit
     digit_idxs = list(filter(
-      lambda i: graph.node[i]['cls'] in range(10),
+      lambda i: graph.nodes[i]['cls'] in range(10),
       range(len(graph.nodes))))
 
     # Add bg
@@ -77,14 +77,14 @@ class MNISTRenderer(object):
 
     # Add digits
     for i in digit_idxs:
-      x = int(graph.node[i]['attr']['loc_x'])
-      y = int(graph.node[i]['attr']['loc_y'])
-      digit_cls = graph.node[i]['cls']
-      texture = graph.node[i]['attr']['texture']
+      x = int(graph.nodes[i]['attr']['loc_x'])
+      y = int(graph.nodes[i]['attr']['loc_y'])
+      digit_cls = graph.nodes[i]['cls']
+      texture = graph.nodes[i]['attr']['texture']
 
       # rotate the object
       img = Image.fromarray(texture)
-      yaw = graph.node[i]['attr']['yaw'] % 360
+      yaw = graph.nodes[i]['attr']['yaw'] % 360
       rimg = img.rotate(yaw, expand=True)
 
       img = np.array(rimg)

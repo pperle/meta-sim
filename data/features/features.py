@@ -82,7 +82,7 @@ class Features(object):
     Update a single graph with new features
     """
     for i in graph.nodes:
-      n = graph.node[i]
+      n = graph.nodes[i]
 
       idx = 0
       if 'class' in self.config['attributes']['features']:
@@ -108,7 +108,7 @@ class Features(object):
     features = []
     mask = []
     for n in graph.nodes:
-      n = graph.node[n]
+      n = graph.nodes[n]
       node_features = []
       node_mask = []
 
