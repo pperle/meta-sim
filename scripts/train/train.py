@@ -40,9 +40,10 @@ class Trainer(object):
     self.model = MetaSim(opts).to(self.device)
     self.generator = self.model.generator
 
-    tasknet_class = get_tasknet(opts['dataset'])
-    self.tasknet = tasknet_class(opts['task']).to(
-      self.opts['task']['device'])
+    if self.opts['use_task_loss']:
+      tasknet_class = get_tasknet(opts['dataset'])
+      self.tasknet = tasknet_class(opts['task']).to(
+        self.opts['task']['device'])
 
     # Data
     sgl = get_scene_graph_loader(opts['dataset']) 
@@ -167,14 +168,15 @@ class Trainer(object):
             io.write_json(lbl, out_lbl)
             i+=1
 
-      # task accuracy
-      acc = self.tasknet.train_from_dir(out_dir)
-      # compute moving average
-      if e > 0:
-        baseline = alpha * acc + (1-alpha) * baseline
-      else:
-        # initialize baseline to acc
-        baseline = acc
+      if self.opts['use_task_loss']:
+        # task accuracy
+        acc = self.tasknet.train_from_dir(out_dir)
+        # compute moving average
+        if e > 0:
+          baseline = alpha * acc + (1-alpha) * baseline
+        else:
+          # initialize baseline to acc
+          baseline = acc
 
       # Reset seeds to get exact same outputs
       rn2 = utils.set_seeds(e)
