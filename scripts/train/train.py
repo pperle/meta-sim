@@ -5,11 +5,15 @@ Authors: Amlan Kar, Aayush Prakash, Ming-Yu Liu, Eric Cameracci, Justin Yuan, Ma
 """
 
 import os
+from datetime import datetime
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import random
 import argparse
+
+from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
 import utils
@@ -116,6 +120,9 @@ class Trainer(object):
     return
 
   def train(self):
+
+    summary_writer = SummaryWriter(f'runs/{opts["exp_name"]}-{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}')
+
     if self.opts['train_reconstruction']:
       self.train_reconstruction()
     
@@ -216,6 +223,10 @@ class Trainer(object):
           print(f'[Dist] Step: {idx} MMD: {mmd.item()}')
           if self.opts['use_task_loss']:
             print(f'[Task] Reward: {acc}, Baseline: {baseline}')
+          
+          summary_writer.add_scalar('MMD', mmd.item(), epoch)
+          summary_writer.flush()
+
           # debug information
           print(f'[Feat] Step: {idx} {dec_act[0, 2, 15:].tolist()} {x[0, 2, 15:].tolist()}')
           # To debug, this index is the loc_x, loc_y, yaw of the 
