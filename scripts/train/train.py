@@ -17,7 +17,7 @@ from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 
 import utils
-import utils.io as io
+import utils.io_util as io
 from data.loaders import get_loader, get_scene_graph_loader
 from models.tasknet import get_tasknet
 from models.metasim import MetaSim

@@ -8,7 +8,7 @@ import os
 import json
 import argparse
 
-import utils.io as io
+import utils.io_util as io
 from data.generator import get_generator
 
 def get_args():

@@ -12,7 +12,7 @@ import os.path as osp
 import numpy as np
 import torch.utils.data as data
 
-import utils.io as io
+import utils.io_util as io
 
 class MNISTLoader(data.Dataset):
   def __init__(self, root):

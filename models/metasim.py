@@ -8,7 +8,7 @@ import torch
 import torch.nn as nn
 import numpy as np
 
-from utils.io import read_json
+from utils.io_util import read_json
 from models.gcn import GCN
 from data.generator import get_generator
 
