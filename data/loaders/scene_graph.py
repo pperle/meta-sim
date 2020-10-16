@@ -12,7 +12,7 @@ class SceneGraphLoader(data.Dataset):
   def __init__(self, generator,
     length=1000):
     self.generator = generator
-    self.length = 1000
+    self.length = length
 
   def __len__(self):
     return self.length
