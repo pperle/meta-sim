@@ -209,6 +209,10 @@ class Trainer(object):
           # add channel dimension and repeat 3 times for MNIST
           im = im.unsqueeze(1).repeat(1,3,1,1) / 255.
           im_real = im_real.permute(0,3,1,2).repeat(1,3,1,1) / 255.
+        elif self.opts['dataset'] == 'carla':
+          # permuteate channel dimension
+          im = im.permute(0, 3, 1, 2) / 255.
+          im_real = im_real.permute(0, 3, 1, 2) / 255.
 
         mmd = self.mmd(im_real, im) * self.opts['weight']['dist_mmd']
 
