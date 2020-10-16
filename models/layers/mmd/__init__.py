@@ -48,13 +48,13 @@ class MMDInception(nn.Module):
 
       for i,d in enumerate(self.dims):
         p = pred[i]
-        out_feats[i].append(p.view(p.size(0), -1))
+        out_feats[i].append(p.reshape(p.size(0), -1))
 
     for i,d in enumerate(self.dims):
       out_feats[i] = torch.cat(out_feats[i], dim=0)
     
     if self.include_image:
-      out_feats.append(images.contiguous().view(images.size(0), -1))
+      out_feats.append(images.contiguous().reshape(images.size(0), -1))
 
     return out_feats
 
