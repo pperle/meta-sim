@@ -1,4 +1,5 @@
 import random
+import time
 import weakref
 from typing import List, Dict
 
@@ -216,9 +217,11 @@ class CarlaWorld:
         @return: None
         """
 
-        self.client.get_world()
-
-        self.world: carla.World = self.client.load_world(map_name)  # RuntimeError: failed to connect to newly created map
+        try:
+            self.world: carla.World = self.client.load_world(map_name)  # RuntimeError: failed to connect to newly created map
+        except RuntimeError:
+            print('CarlaWorld', 'waiting 10s for CARLA simulator to respond')
+            time.sleep(10)
         self.world.wait_for_tick(timeout)
 
     def highlight_waypoints(self, distance: float = 1.0, thickness: float = 0.2, life_time: float = 30, hide_lane_changes: bool = False) -> None:
