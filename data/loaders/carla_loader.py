@@ -27,18 +27,9 @@ class CarlaLoader(data.Dataset):
 
         img = img.transpose((2, 0, 1))  # convert to HWC
         img = (torch.FloatTensor(img) / 255.0)
-
-        image = Image.open(self.files[index]).convert('RGB')
         return img, None
 
     def pull_image(self, index):
-        data_id = self.files[index]
-        # img = cv2.imread(data_id + '.jpg', cv2.IMREAD_COLOR)  # TODO maybe replace with Pillow
-        # height, width, channels = img.shape
-        # assert channels == 3
-
-        # return np.expand_dims(img[:, :, 0], axis=2)  # TODO grayscale ?!?
-
         image = Image.open(self.files[index] + '.jpg').convert('RGB')
         return np.asarray(image)
 
