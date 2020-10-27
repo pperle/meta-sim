@@ -1,0 +1,43 @@
+dataset: 'carla'
+seed: 1337
+exp_name: 'carla-rotation-top'
+variant_name: 'exp_01'
+# When you want to have many variants of the same experiment
+
+config: 'data/generator/config/carla-rotate-top.json'
+# config corresponding to the prior
+logdir: 'logs/'
+device: 'cpu'
+
+# training
+print_freq: 40
+batch_size: 50
+# need a high batch size for a good estimate of mmd
+num_real_images: 42 # 200
+max_epochs: 2000
+epoch_length: 200 # 1000 #number of samples that constitute one epoch
+train_reconstruction: true
+freeze_encoder: true
+reconstruction_epochs: 1000
+use_dist_loss: true
+use_task_loss: false
+moving_avg_alpha: 0.7 # moving_avg_alpha for baseline
+
+# MMD
+mmd_dims: [64, 192]
+# sizes of layers of inception to use for MMD. Check 
+# the inception file for possible values
+mmd_resize_input: false
+
+optim:
+  lr: 0.001
+  lr_decay: 200 # number of epochs to decay after
+  lr_decay_gamma: 0.5 # gamma to decay
+  weight_decay: 0.00001
+
+weight:
+  class: 0.1 # weight for class during reconstruction training
+  dist_mmd: 100.0 # multiplier for mmd
+
+task:
+  val_root: 'data/datagen/carla-rotation-top/exp_01/'
