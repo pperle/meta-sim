@@ -121,8 +121,8 @@ class Trainer(object):
     return
 
   def train(self):
-
-    summary_writer = SummaryWriter(f'runs/{opts["exp_name"]}-{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}')
+    model_name = f'{opts["exp_name"]}-{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}'
+    summary_writer = SummaryWriter(f'runs/{model_name}')
 
     if self.opts['train_reconstruction']:
       self.train_reconstruction()
@@ -230,13 +230,20 @@ class Trainer(object):
           if self.opts['use_task_loss']:
             print(f'[Task] Reward: {acc}, Baseline: {baseline}')
           
-          summary_writer.add_scalar('MMD', mmd.item(), epoch)
-          summary_writer.flush()
-
           # debug information
-          print(f'[Feat] Step: {idx} {dec_act[0, 2, 15:].tolist()} {x[0, 2, 15:].tolist()}')
-          # To debug, this index is the loc_x, loc_y, yaw of the 
-          # digit in MNIST
+          if opts['exp_name'] in ['mnist_rotation', 'mnist_rotation_translation']:
+            print(f'[Feat] Step: {idx} {dec_act[0, 2, 15:].tolist()} {x[0, 2, 15:].tolist()}')
+            # To debug, this index is the loc_x, loc_y, yaw of the digit in MNIST
+          elif opts['exp_name'] == 'exp_01-report':
+            print(f'[Feat] Step: {idx} {dec_act[0, 2, 6].tolist()} {x[0, 2, 6].tolist()}')  # carla yaw
+
+      summary_writer.add_scalar('MMD', mmd.item(), e)
+      summary_writer.flush()
+
+      torch.save({
+        'epoch': e,
+        'model_state_dict': self.model.state_dict()
+      }, f'saved_models/{model_name}-epoch={e}-MMD={mmd.item()}.pth')
 
       if self.opts['use_task_loss']:
         self.optimizer.step()
