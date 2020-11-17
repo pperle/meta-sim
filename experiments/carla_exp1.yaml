@@ -1,24 +1,24 @@
 dataset: 'carla'
 seed: 1337
-exp_name: 'carla_rotation'
-variant_name: 'town_10_1'
+exp_name: 'exp_01-report'
+variant_name: 'exp_01'
 # When you want to have many variants of the same experiment
 
-config: 'data/generator/config/carla.json'
+config: 'data/generator/config/carla_report_exp1.json'
 # config corresponding to the prior
 logdir: 'logs/'
-device: 'cuda'
+device: 'cpu'
 
 # training
-print_freq: 1  # 40
-batch_size: 10  # 50
+print_freq: 40
+batch_size: 50
 # need a high batch size for a good estimate of mmd
-num_real_images: 1  # 200
+num_real_images: 41 # 200
 max_epochs: 2000
-epoch_length: 100 # 1000 #number of samples that constitute one epoch
+epoch_length: 200 # 1000 #number of samples that constitute one epoch
 train_reconstruction: true
 freeze_encoder: true
-reconstruction_epochs:  1  # 7
+reconstruction_epochs: 7 # 100
 use_dist_loss: true
 use_task_loss: false
 moving_avg_alpha: 0.7 # moving_avg_alpha for baseline
@@ -40,13 +40,4 @@ weight:
   dist_mmd: 100.0 # multiplier for mmd
 
 task:
-  val_root: 'data/datagen/carla/target_rot/'
-  # data corresponding to the target configuration
-  # usually you would generate one small version
-  # and one large version of the target
-  # Use the small version while training and
-  # the large version to report final results
-  # this is not included in this code for simplicity
-  # but is easy to add by editing the test
-  # function in the task network to report two
-  # accuracies, out of which one would be used to train
+  val_root: 'data/datagen/carla_report/exp_01/'
