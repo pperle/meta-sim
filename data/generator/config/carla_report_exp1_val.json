@@ -1,0 +1,46 @@
+{
+  "class": ["Deterministic", "Camera"],
+  "attributes": {
+    "features": ["class"],
+    "mutable": [],
+    "dataset": "carla",
+    "immutable": true,
+    "directed" : true,
+    "size": [299, 299],
+    "num_samples":1000,
+    "world_map": "Town10HD",
+    "output_dir" : "data/datagen/carla/town_10_1/",
+    "loc_x": ["Deterministic", 79.6700210571289],
+    "loc_y": ["Deterministic", 66.35041809082031],
+    "loc_z": ["Deterministic", 10.0],
+    "yaw": ["Deterministic", 0],
+    "pitch": ["Deterministic", -90],
+    "roll": ["Deterministic", 90]
+  },
+  "num_child" : ["Deterministic", 1],
+  "child": [
+    {
+      "class": ["Deterministic","Lane"],
+      "attributes": {
+        "mutable" : [],
+        "immutable": true,
+        "waypoints": [{"loc_x": 79.6700210571289, "loc_y": 66.35041809082031, "loc_z": 0, "yaw": 180.07327270507812, "pitch": 0, "roll": 0}]
+      },
+      "num_child" : ["Deterministic", 1],
+      "child": [
+        {
+          "class":["Deterministic", "Car"],
+          "attributes": {
+            "mutable": ["yaw"],
+            "immutable": false,
+            "yaw": ["Deterministic", 0],
+            "point_on_lane": ["Deterministic", 0],
+            "car_type": ["Deterministic", "vehicle.seat.leon"]
+          },
+          "num_child" : ["Deterministic", 0],
+          "child": []
+        }
+      ]
+    }
+  ]
+}
