@@ -67,3 +67,13 @@ Synthetic images generated for a training epoch for the task net should be avail
 
 - Training with the task-loss is slow, with one gradient update for a lot of computation. For larger experiments, we train with just MMD first, and finetune with the task loss. Here, both are set to be on by default. Depending on initialization, sometimes training might take a long time to converge, but in our experience, it eventually always converges.
 - Sometimes, it is important to have enough target data for distribution matching to work properly. Here, for example we generate 1000 examples synthetically to use as target data, which sometimes might be not enough due to randomness in how diverse the generated data is. Try increasing the size if you face issues by modifying the appropriate config file used by the data generation script. 
+
+#### CARLA Simulator
+
+1. Download the latest version of [CARLA Simulator](https://github.com/carla-simulator/carla/releases) as well as the additional maps.
+2. Start CARLA Simulator with `./CarlaUE4.sh -carla-rpc-port=2000 -windowed -ResX=1280 -ResY=720`
+3. run `python scripts/train/train.py --exp experiments/carla_exp1.yaml`
+
+<p align="center">
+  <img src="https://github.com/pperle/meta-sim/raw/carla/docs/carla_exp1.gif?raw=true" alt="CARLA Simulator Demo" width="50%" margin="auto"/>
+</p>
