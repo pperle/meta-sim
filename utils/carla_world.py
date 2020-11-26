@@ -87,7 +87,7 @@ class CarlaWorld:
         self.actors = []  # reset list of actors
 
     @staticmethod
-    def __get_frame(weak_self, sensor_name: str, image: carla.Image, frame_filer: int = 10, semantic_segmentation: bool = False, **kwargs) -> None:
+    def __get_frame(weak_self, sensor_name: str, image: carla.Image, frame_filter: int = 10, semantic_segmentation: bool = False, **kwargs) -> None:
         """
         Wrapper for `__save_frame_to_disk` that stops the camera from capturing after an image has been saved.
 
@@ -95,14 +95,14 @@ class CarlaWorld:
         @param sensor_name: name of the current sensor
         @param image: image from camera
         @param file_name: file name on disk
-        @param frame_filer: number of frames to skip between saved images, only needed to sync semantic_segmentation with rgb camera
+        @param frame_filter: number of frames to skip between saved images, only needed to sync semantic_segmentation with rgb camera
         @param semantic_segmentation: determines whether the camera is semantic_segmentation
         """
         self = weak_self()
         if not self:
             raise ValueError('self is not defined!')
 
-        if image.frame % frame_filer == 0:
+        if image.frame % frame_filter == 0:
             if semantic_segmentation:
                 image.convert(carla.ColorConverter.CityScapesPalette)
             saved_frame = image_to_np(image)
@@ -114,7 +114,7 @@ class CarlaWorld:
                     camera.stop()
 
     @staticmethod
-    def __save_single_frame_to_disk(weak_self, sensor_name: str, image: carla.Image, file_name: str, frame_filer: int = 10, semantic_segmentation: bool = False) -> None:
+    def __save_single_frame_to_disk(weak_self, sensor_name: str, image: carla.Image, file_name: str, frame_filter: int = 10, semantic_segmentation: bool = False) -> None:
         """
         Wrapper for `__save_frame_to_disk` that stops the camera from capturing after an image has been saved.
 
@@ -122,32 +122,32 @@ class CarlaWorld:
         @param sensor_name: name of the current sensor
         @param image: image from camera
         @param file_name: file name on disk
-        @param frame_filer: number of frames to skip between saved images, only needed to sync semantic_segmentation with rgb camera
+        @param frame_filter: number of frames to skip between saved images, only needed to sync semantic_segmentation with rgb camera
         @param semantic_segmentation: determines whether the camera is semantic_segmentation
         """
         self = weak_self()
         if not self:
             raise ValueError('self is not defined!')
 
-        saved_frame = CarlaWorld.__save_frame_to_disk(image, file_name, frame_filer, semantic_segmentation)
+        saved_frame = CarlaWorld.__save_frame_to_disk(image, file_name, frame_filter, semantic_segmentation)
         if saved_frame is not None:
             camera = self.cameras.get(sensor_name, None)
-            camera.image = saved_frame
+            camera.saved_frame = saved_frame
             if camera:
                 camera.stop()
 
     @staticmethod
-    def __save_frame_to_disk(image: carla.Image, file_name: str, frame_filer: int = 10, semantic_segmentation: bool = False) -> bool:
+    def __save_frame_to_disk(image: carla.Image, file_name: str, frame_filter: int = 10, semantic_segmentation: bool = False) -> bool:
         """
-        Callback function for `camera.listen`. Saves an image every `frame_filer` frame to disk.
+        Callback function for `camera.listen`. Saves an image every `frame_filter` frame to disk.
 
         @param image: image from camera
         @param file_name: file name on disk
-        @param frame_filer: number of frames to skip between saved images, only needed to sync semantic_segmentation with rgb camera
+        @param frame_filter: number of frames to skip between saved images, only needed to sync semantic_segmentation with rgb camera
         @param semantic_segmentation: determines whether the camera is semantic_segmentation
         @return: `True` if frame was saved otherwise `False`
         """
-        if image.frame % frame_filer == 0:
+        if image.frame % frame_filter == 0:
             if semantic_segmentation:
                 image.save_to_disk(file_name % image.frame, carla.ColorConverter.CityScapesPalette)
             else:
